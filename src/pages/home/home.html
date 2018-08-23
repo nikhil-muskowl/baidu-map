@@ -7,11 +7,14 @@
 <ion-content padding>
   <h2>Welcome to Ionic!</h2>
   <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
+    This starter project comes with simple tabs-based layout for apps that are going to primarily use a Tabbed UI.
   </p>
   <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
+    Take a look at the <code>src/pages/</code> directory to add or change tabs, update any existing page or create new pages.
   </p>
+
+  <baidu-map [options]="options" (onMapLoaded)="loadMap($event)" (onMarkerClicked)="clickMarker($event)" (clicked)="clickmap($event)">
+    <marker *ngFor="let marker of markers" [point]="marker.point" [options]="marker.options" (clicked)="showWindow($event)"></marker>
+    <control type="navigation" [options]="navOptions"></control>
+  </baidu-map>
 </ion-content>
