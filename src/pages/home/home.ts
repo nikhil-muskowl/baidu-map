@@ -12,7 +12,7 @@ export class HomePage {
   public locations: any;
   public fileterData: any;
   public responseData: any;
-  public search = '餐馆';
+  public search = '';
   public latitude: number = 0;
   public longitude: number = 0;
   public data: any;
