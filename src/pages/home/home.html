@@ -6,8 +6,14 @@
 
 <ion-content padding>
 
-  <ion-searchbar [(ngModel)]="search" [showCancelButton]="shouldShowCancel" (search)="onInput($event)" (ionCancel)="onCancel($event)">
+  <ion-searchbar [(ngModel)]="search" [showCancelButton]="shouldShowCancel" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)">
   </ion-searchbar>
+
+  <ion-list>
+    <button ion-item *ngFor="let location of locations" (click)="itemSelected(location)">
+      {{ location.name }}
+    </button>
+  </ion-list>
 
   <baidu-map [options]="options" (onMapLoaded)="loadMap($event)" (onMarkerClicked)="clickMarker($event)" (clicked)="clickmap($event)">
     <marker *ngFor="let marker of markers" [point]="marker.point" [options]="marker.options" (clicked)="showWindow($event)"></marker>

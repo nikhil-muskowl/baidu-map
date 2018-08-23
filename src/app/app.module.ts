@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { HttpClientModule } from "@angular/common/http";
+import { FormsModule } from "@angular/forms";
 
 
 import { AboutPage } from '../pages/about/about';
@@ -16,6 +17,7 @@ import { BaiduMapModule } from 'angular2-baidu-map'
 import { Geolocation } from '@ionic-native/geolocation';
 import { LocationTrackerProvider } from '../providers/location-tracker/location-tracker';
 import { BaiduProvider } from '../providers/baidu/baidu';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -26,7 +28,8 @@ import { BaiduProvider } from '../providers/baidu/baidu';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
+    HttpClientModule,    
+    FormsModule,
     BaiduMapModule.forRoot({ak: 'j7eig5KpXzk4YsWNwpagmybjL2WRGCZC'}),
     IonicModule.forRoot(MyApp)
   ],
@@ -44,7 +47,7 @@ import { BaiduProvider } from '../providers/baidu/baidu';
     Geolocation,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     LocationTrackerProvider,
-    BaiduProvider,    
+    BaiduProvider    
   ]
 })
 export class AppModule { }

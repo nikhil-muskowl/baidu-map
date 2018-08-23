@@ -11,6 +11,7 @@ import { ControlAnchor, MapOptions, NavigationControlOptions, NavigationControlT
 export class HomePage {
   public locations: any;
   public fileterData: any;
+  public responseData: any;
   public search = '餐馆';
   public latitude: number = 0;
   public longitude: number = 0;
@@ -26,9 +27,11 @@ export class HomePage {
     public locationTrackerProvider: LocationTrackerProvider,
     public baiduProvider: BaiduProvider
   ) {
+    this.bindMap();
 
-    this.getLocation();
+  }
 
+  public bindMap() {
     this.options = {
       centerAndZoom: {
         lat: this.latitude,
@@ -39,49 +42,72 @@ export class HomePage {
       mapType: MapTypeEnum.BMAP_NORMAL_MAP
     };
 
-    this.locationTrackerProvider.getPosition().then((data) => {
-      if (data) {
-        console.log(data.coords);
-        this.latitude = data.coords.latitude;
-        this.longitude = data.coords.longitude;
-
-        this.options = {
-          centerAndZoom: {
-            lat: this.latitude,
-            lng: this.longitude,
-            zoom: 16
-          },
-          enableKeyboard: true,
-          mapType: MapTypeEnum.BMAP_NORMAL_MAP
-        };
-
-        this.markers = [
-          {
-            options: {
-              // enableDragging: true,
-              icon: {
-                imageUrl: '/assets/marker.png',
-                size: {
-                  height: 50,
-                  width: 50
-                },
-                imageSize: {
-                  height: 50,
-                  width: 50
-                }
-              }
+    this.markers = [
+      {
+        options: {
+          // enableDragging: true,
+          icon: {
+            imageUrl: '/assets/marker.png',
+            size: {
+              height: 50,
+              width: 50
             },
-            point: {
-              lat: this.latitude,
-              lng: this.longitude
+            imageSize: {
+              height: 50,
+              width: 50
             }
           }
-        ];
-
+        },
+        point: {
+          lat: this.latitude,
+          lng: this.longitude
+        }
       }
-    }).catch(e => {
-      console.log(e);
-    });;
+    ];
+
+    // this.locationTrackerProvider.getPosition().then((data) => {
+    //   if (data) {
+    //     console.log(data.coords);
+    //     this.latitude = data.coords.latitude;
+    //     this.longitude = data.coords.longitude;
+
+    //     this.options = {
+    //       centerAndZoom: {
+    //         lat: this.latitude,
+    //         lng: this.longitude,
+    //         zoom: 16
+    //       },
+    //       enableKeyboard: true,
+    //       mapType: MapTypeEnum.BMAP_NORMAL_MAP
+    //     };
+
+    //     this.markers = [
+    //       {
+    //         options: {
+    //           // enableDragging: true,
+    //           icon: {
+    //             imageUrl: '/assets/marker.png',
+    //             size: {
+    //               height: 50,
+    //               width: 50
+    //             },
+    //             imageSize: {
+    //               height: 50,
+    //               width: 50
+    //             }
+    //           }
+    //         },
+    //         point: {
+    //           lat: this.latitude,
+    //           lng: this.longitude
+    //         }
+    //       }
+    //     ];
+
+    //   }
+    // }).catch(e => {
+    //   console.log(e);
+    // });;
 
     this.navOptions = {
       anchor: ControlAnchor.BMAP_ANCHOR_TOP_RIGHT,
@@ -90,10 +116,9 @@ export class HomePage {
 
   }
 
-
   public onInput(ev: any) {
     this.search = ev.target.value;
-    console.log(this.search);
+    this.locations=[];
     this.getLocation();
   }
 
@@ -102,15 +127,35 @@ export class HomePage {
   }
 
   public getLocation() {
-    this.fileterData = { query: this.search };
+    this.fileterData = {
+      query: this.search,
+      location: `${this.latitude},${this.longitude}`
+    };
 
     this.baiduProvider.location(this.fileterData).subscribe(
       response => {
         console.log(response);
+        this.responseData = response;
+        this.locations = this.responseData.results;
       },
       err => { console.error(err); }
     );
     console.log(this.locations);
+  }
+
+  public itemSelected(location: any) {
+    console.log(location.location);
+    if (location) {
+      this.latitude = location.location.lat;
+      this.longitude = location.location.lng;
+    }
+
+    console.log(this.latitude);
+    console.log(this.longitude);
+
+    this.bindMap();
+
+    this.locations=[];
   }
 
   public showWindow({ e, marker, map }: any): void {
