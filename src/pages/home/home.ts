@@ -1,14 +1,17 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LocationTrackerProvider } from '../../providers/location-tracker/location-tracker';
-
-
+import { BaiduProvider } from '../../providers/baidu/baidu';
 import { ControlAnchor, MapOptions, NavigationControlOptions, NavigationControlType, Point, MapTypeEnum, MarkerOptions } from 'angular2-baidu-map';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
 })
 export class HomePage {
+  public locations: any;
+  public fileterData: any;
+  public search = '餐馆';
   public latitude: number = 0;
   public longitude: number = 0;
   public data: any;
@@ -18,7 +21,13 @@ export class HomePage {
   navOptions: NavigationControlOptions;
   public markers: Array<{ point: Point; options?: MarkerOptions }>;
 
-  constructor(public navCtrl: NavController, public locationTrackerProvider: LocationTrackerProvider) {
+  constructor(
+    public navCtrl: NavController,
+    public locationTrackerProvider: LocationTrackerProvider,
+    public baiduProvider: BaiduProvider
+  ) {
+
+    this.getLocation();
 
     this.options = {
       centerAndZoom: {
@@ -74,8 +83,6 @@ export class HomePage {
       console.log(e);
     });;
 
-
-
     this.navOptions = {
       anchor: ControlAnchor.BMAP_ANCHOR_TOP_RIGHT,
       type: NavigationControlType.BMAP_NAVIGATION_CONTROL_LARGE
@@ -84,6 +91,27 @@ export class HomePage {
   }
 
 
+  public onInput(ev: any) {
+    this.search = ev.target.value;
+    console.log(this.search);
+    this.getLocation();
+  }
+
+  public onCancel(ev: any) {
+    this.search = '';
+  }
+
+  public getLocation() {
+    this.fileterData = { query: this.search };
+
+    this.baiduProvider.location(this.fileterData).subscribe(
+      response => {
+        console.log(response);
+      },
+      err => { console.error(err); }
+    );
+    console.log(this.locations);
+  }
 
   public showWindow({ e, marker, map }: any): void {
     console.log(e);
