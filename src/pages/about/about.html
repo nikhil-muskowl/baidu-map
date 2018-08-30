@@ -7,5 +7,7 @@
 </ion-header>
 
 <ion-content padding>
-
+  <baidu-map [options]="opts">
+    <marker-clusterer [options]="clustererOptions" (loaded)="markerClustererLoaded($event)"></marker-clusterer>
+  </baidu-map>
 </ion-content>
